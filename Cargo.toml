@@ -1,0 +1,25 @@
+[package]
+name = "pittore"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+bytemuck = "*"
+euclid = "*"
+log = "*"
+lyon = "*"
+raw-window-handle = "*"
+thiserror = "*"
+winit = "*"
+
+[target.'cfg(windows)'.dependencies]
+windows = { version = "*", features = [
+    "Foundation_Numerics",
+    "Win32_Foundation",
+    "Win32_Graphics_Direct2D",
+    "Win32_Graphics_Direct2D_Common",
+    "Win32_Graphics_Dxgi_Common",
+] }
+
+[dev-dependencies]
+winit = "*"
