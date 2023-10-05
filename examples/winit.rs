@@ -35,6 +35,14 @@ fn main() {
                 window_id,
             } if window_id == window.id() => *control_flow = ControlFlow::Exit,
 
+            Event::WindowEvent {
+                event: WindowEvent::Resized(size),
+                ..
+            } => {
+                render_target.resize(size.width, size.height)
+                    .expect("Failed to resize render target");
+            }
+
             Event::RedrawRequested(..) => {
                 let window_size = window.inner_size()
                     .to_logical::<f32>(window.scale_factor());

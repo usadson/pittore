@@ -16,6 +16,7 @@ pub use self::{
     error::{
         PittoreInstantiationError,
         PittoreRenderError,
+        PittoreResizeError,
         PittoreWindowAttachmentError,
     },
     render_pass::PittoreRenderPass,

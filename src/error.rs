@@ -23,6 +23,17 @@ pub enum PittoreRenderError {
     Direct2DGenericError(WindowsError),
 }
 
+/// An error that occurred whilst resizing a render target.
+#[derive(Debug, thiserror::Error)]
+pub enum PittoreResizeError {
+    #[error("The new dimensions for resizing the render target are invalid.")]
+    InvalidResizeDimensions,
+
+    #[cfg(windows)]
+    #[error("Direct2D failed to resize the render target")]
+    Direct2DGenericError(WindowsError),
+}
+
 /// An error that occurred whilst attaching to a window.
 #[derive(Debug, thiserror::Error)]
 pub enum PittoreWindowAttachmentError {

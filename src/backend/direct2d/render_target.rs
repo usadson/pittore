@@ -6,6 +6,7 @@ use std::{sync::Mutex, ops::Deref};
 use windows::Win32::Graphics::Direct2D::{
     Common::{
         D2D1_COLOR_F,
+        D2D_SIZE_U,
         D2D_RECT_F,
     },
     ID2D1HwndRenderTarget,
@@ -18,6 +19,7 @@ use crate::{
     PittoreShape,
     PittoreRenderError,
     PittoreRenderPass,
+    PittoreResizeError,
     RenderTarget,
 };
 
@@ -63,6 +65,15 @@ impl RenderTarget for DirectRenderTarget {
         }
 
         Ok(())
+    }
+
+    fn resize(&self, width: u32, height: u32) -> Result<(), PittoreResizeError> {
+        let size = D2D_SIZE_U { width, height };
+        let handle = self.inner.lock().unwrap();
+
+        let result = unsafe { handle.Resize(&size) };
+
+        result.map_err(|e| PittoreResizeError::Direct2DGenericError(e.into()))
     }
 }
 

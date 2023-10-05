@@ -3,7 +3,12 @@
 
 use std::sync::Arc;
 
-use crate::{AsDebug, PittoreRenderPass, PittoreRenderError};
+use crate::{
+    AsDebug,
+    PittoreRenderError,
+    PittoreRenderPass,
+    PittoreResizeError,
+};
 
 pub struct PittoreRenderTarget {
     target: Arc<dyn RenderTarget>,
@@ -28,4 +33,5 @@ impl std::ops::Deref for PittoreRenderTarget {
 
 pub trait RenderTarget: AsDebug + Send + Sync {
     fn begin_render_pass(&self, f: &mut dyn FnMut(&mut dyn PittoreRenderPass)) -> Result<(), PittoreRenderError>;
+    fn resize(&self, width: u32, height: u32) -> Result<(), PittoreResizeError>;
 }
