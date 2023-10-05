@@ -1,0 +1,55 @@
+name: Rust
+
+on:
+  push:
+    branches: [ "main" ]
+    paths-ignore:
+    - 'README.md'
+    - 'LICENSE.md'
+    - '.gitignore'
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Linux packages
+      if: matrix.os == 'ubuntu-latest'
+      run: sudo apt install -y libxcb-shape0
+    - name: Install nightly Rust toolchain
+      continue-on-error: true
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: nightly
+        default: true
+        override: true
+    - name: Install beta Rust toolchain (as fallback for nightly)
+      if: ${{ failure() }}
+      continue-on-error: true
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: beta
+        default: true
+        override: true
+    - name: Install stable Rust toolchain (as fallback for nightly and beta)
+      if: ${{ failure() }}
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        default: true
+        override: true
+    - uses: Swatinem/rust-cache@v2
+    - name: Build
+      run: cargo build --verbose
+    - name: Run tests
+      run: cargo test --verbose
