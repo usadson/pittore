@@ -40,8 +40,10 @@ impl Backend for DirectBackend {
     }
 }
 
-pub(crate) fn create_backend() -> Result<Arc<dyn Backend>, PittoreInstantiationError> {
-    let factory = match DirectFactory::new() {
+pub(crate) fn create_backend(
+    debug: bool,
+) -> Result<Arc<dyn Backend>, PittoreInstantiationError> {
+    let factory = match DirectFactory::new(debug) {
         Ok(factory) => factory,
         Err(e) => {
             log::error!("Failed to create Direct2D Factory: {e:?}");

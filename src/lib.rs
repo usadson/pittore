@@ -58,7 +58,7 @@ impl PittoreContextBuilder {
     pub fn build(self) -> Result<PittoreContext, PittoreInstantiationError> {
         #[cfg(windows)]
         {
-            let backend = backend::direct2d::create_backend()?;
+            let backend = backend::direct2d::create_backend(self.debug)?;
             Ok(PittoreContext {
                 backend,
             })

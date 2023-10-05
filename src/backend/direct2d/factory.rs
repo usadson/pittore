@@ -18,6 +18,7 @@ use windows::Win32::{
         D2D1_FACTORY_OPTIONS,
 
         D2D1_DEBUG_LEVEL_INFORMATION,
+        D2D1_DEBUG_LEVEL_ERROR,
         D2D1_FACTORY_TYPE_SINGLE_THREADED,
     },
 };
@@ -30,10 +31,14 @@ pub(super) struct DirectFactory {
 }
 
 impl DirectFactory {
-    pub fn new() -> Result<Self, windows::core::Error> {
+    pub fn new(debug: bool) -> Result<Self, windows::core::Error> {
         let opts = D2D1_FACTORY_OPTIONS {
             #[cfg(debug_assertions)]
-            debugLevel: D2D1_DEBUG_LEVEL_INFORMATION,
+            debugLevel: if debug {
+                D2D1_DEBUG_LEVEL_INFORMATION
+            } else {
+                D2D1_DEBUG_LEVEL_ERROR
+            },
 
             ..Default::default()
         };
