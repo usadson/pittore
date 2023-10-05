@@ -7,6 +7,7 @@ mod debug;
 mod error;
 mod render_pass;
 mod render_target;
+mod shape;
 
 use std::sync::Arc;
 
@@ -19,6 +20,10 @@ pub use self::{
     },
     render_pass::PittoreRenderPass,
     render_target::PittoreRenderTarget,
+    shape::{
+        PittoreRect,
+        PittoreShape,
+    },
 };
 
 pub(crate) use self::{

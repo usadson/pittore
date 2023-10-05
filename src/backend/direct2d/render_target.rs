@@ -3,9 +3,23 @@
 
 use std::{sync::Mutex, ops::Deref};
 
-use windows::Win32::Graphics::Direct2D::ID2D1HwndRenderTarget;
+use windows::Win32::Graphics::Direct2D::{
+    Common::{
+        D2D1_COLOR_F,
+        D2D_RECT_F,
+    },
+    ID2D1HwndRenderTarget,
+    ID2D1SolidColorBrush,
+};
 
-use crate::{RenderTarget, PittoreRenderPass, PittoreRenderError};
+use crate::{
+    PittoreColor,
+    PittoreRect,
+    PittoreShape,
+    PittoreRenderError,
+    PittoreRenderPass,
+    RenderTarget,
+};
 
 #[derive(Debug)]
 pub(super) struct DirectRenderTarget {
@@ -29,12 +43,17 @@ impl RenderTarget for DirectRenderTarget {
             return Err(PittoreRenderError::RenderTargetAlreadyInUse);
         };
 
+        let solid_color_brush = unsafe {
+            target.CreateSolidColorBrush(&D2D1_COLOR_F::default(), None)
+        }.unwrap();
+
         unsafe {
             target.BeginDraw();
         }
 
         let mut pass = DirectRenderPass {
-            handle: target.deref()
+            handle: target.deref(),
+            solid_color_brush,
         };
 
         f(&mut pass);
@@ -49,12 +68,34 @@ impl RenderTarget for DirectRenderTarget {
 
 struct DirectRenderPass<'handle> {
     handle: &'handle ID2D1HwndRenderTarget,
+    solid_color_brush: ID2D1SolidColorBrush,
 }
 
 impl<'handle> PittoreRenderPass for DirectRenderPass<'handle> {
-    fn clear(&mut self, color: crate::PittoreColor) {
+    fn clear(&mut self, color: PittoreColor) {
         unsafe {
             self.handle.Clear(Some(&color.into()));
         }
+    }
+
+    fn fill(&mut self, color: PittoreColor, shape: PittoreShape) {
+        unsafe {
+            self.solid_color_brush.SetColor(&color.into());
+        }
+
+        match shape {
+            PittoreShape::Rectangle(rect) => unsafe {
+                self.handle.FillRectangle(&convert_rect(rect), &self.solid_color_brush)
+            }
+        }
+    }
+}
+
+fn convert_rect(value: PittoreRect) -> D2D_RECT_F {
+    D2D_RECT_F {
+        left: value.min_x(),
+        top: value.min_y(),
+        right: value.max_x(),
+        bottom: value.max_y(),
     }
 }

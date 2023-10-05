@@ -1,9 +1,12 @@
 // Copyright (C) 2023 Tristan Gerritsen <tristan@thewoosh.org>
 // All Rights Reserved.
 
+use euclid::default::{Point2D, Size2D};
 use pittore::{
     PittoreColor,
     PittoreContextBuilder,
+    PittoreRect,
+    PittoreShape,
 };
 
 use winit::{
@@ -33,8 +36,18 @@ fn main() {
             } if window_id == window.id() => *control_flow = ControlFlow::Exit,
 
             Event::RedrawRequested(..) => {
+                let window_size = window.inner_size()
+                    .to_logical::<f32>(window.scale_factor());
+
                 render_target.begin_render_pass(&mut |render_pass| {
-                    render_pass.clear(PittoreColor::RED)
+                    render_pass.clear(PittoreColor::RED);
+
+                    render_pass.fill(PittoreColor::BLUE, PittoreShape::Rectangle(
+                        PittoreRect::new(
+                            Point2D::new(10.0, 10.0),
+                            Size2D::new(window_size.width - 20.0, window_size.height - 20.0)
+                        )
+                    ));
                 }).unwrap();
             }
 
