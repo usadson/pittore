@@ -47,13 +47,34 @@ impl PittoreContext {
     }
 }
 
-#[derive(Default)]
 pub struct PittoreContextBuilder {
     debug: bool,
 }
 
+impl Default for PittoreContextBuilder {
+    fn default() -> Self {
+        Self {
+            #[cfg(debug_assertions)]
+            debug: true,
+
+            #[cfg(not(debug_assertions))]
+            debug: false,
+
+        }
+    }
+}
+
 impl PittoreContextBuilder {
     pub fn new() -> Self { Self::default() }
+
+    /// Enable or disable the debug flag. Initially set to `true` on debug
+    /// builds, and `false` on release builds.
+    pub fn with_debug(self, debug: bool) -> Self {
+        Self {
+            debug,
+            ..self
+        }
+    }
 
     pub fn build(self) -> Result<PittoreContext, PittoreInstantiationError> {
         #[cfg(windows)]
