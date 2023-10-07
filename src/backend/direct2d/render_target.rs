@@ -17,6 +17,7 @@ use windows::Win32::Graphics::Direct2D::{
 
 use crate::{
     PittoreColor,
+    PittoreMaterial,
     PittoreRect,
     PittoreShape,
     PittoreRenderError,
@@ -91,14 +92,17 @@ impl<'handle> PittoreRenderPass for DirectRenderPass<'handle> {
         }
     }
 
-    fn fill(&mut self, color: PittoreColor, shape: PittoreShape) {
-        unsafe {
-            self.solid_color_brush.SetColor(&color.into());
-        }
+    fn fill(&mut self, material: PittoreMaterial, shape: PittoreShape) {
+        let brush = match material {
+            PittoreMaterial::Color(color) => unsafe {
+                self.solid_color_brush.SetColor(&color.into());
+                &self.solid_color_brush
+            }
+        };
 
         match shape {
             PittoreShape::Rectangle(rect) => unsafe {
-                self.handle.FillRectangle(&convert_rect(rect), &self.solid_color_brush)
+                self.handle.FillRectangle(&convert_rect(rect), brush)
             }
             PittoreShape::Ellipse { center, radius } => unsafe {
                 self.handle.FillEllipse(
@@ -110,7 +114,7 @@ impl<'handle> PittoreRenderPass for DirectRenderPass<'handle> {
                         radiusX: radius.x,
                         radiusY: radius.y,
                     },
-                    &self.solid_color_brush,
+                    brush,
                 );
             }
         }

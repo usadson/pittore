@@ -5,6 +5,7 @@ mod backend;
 mod color;
 mod debug;
 mod error;
+mod material;
 mod render_pass;
 mod render_target;
 mod shape;
@@ -19,6 +20,7 @@ pub use self::{
         PittoreResizeError,
         PittoreWindowAttachmentError,
     },
+    material::PittoreMaterial,
     render_pass::PittoreRenderPass,
     render_target::PittoreRenderTarget,
     shape::{

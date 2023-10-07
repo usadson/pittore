@@ -50,14 +50,14 @@ fn main() {
                 render_target.begin_render_pass(&mut |render_pass| {
                     render_pass.clear(PittoreColor::RED);
 
-                    render_pass.fill(PittoreColor::BLUE, PittoreShape::Rectangle(
+                    render_pass.fill(PittoreColor::BLUE.into(), PittoreShape::Rectangle(
                         PittoreRect::new(
                             Point2D::new(10.0, 10.0),
                             Size2D::new(window_size.width - 20.0, window_size.height - 20.0)
                         )
                     ));
 
-                    render_pass.fill(PittoreColor::MAGENTA, PittoreShape::Ellipse {
+                    render_pass.fill(PittoreColor::MAGENTA.into(), PittoreShape::Ellipse {
                         center: Point2D::new(window_size.width / 2.0, window_size.height / 2.0),
                         radius: Point2D::new(20.0, 20.0),
                     })

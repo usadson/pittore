@@ -3,11 +3,12 @@
 
 use crate::{
     PittoreColor,
+    PittoreMaterial,
     PittoreShape,
 };
 
 pub trait PittoreRenderPass {
     fn clear(&mut self, color: PittoreColor);
 
-    fn fill(&mut self, color: PittoreColor, shape: PittoreShape);
+    fn fill(&mut self, material: PittoreMaterial, shape: PittoreShape);
 }
