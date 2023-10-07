@@ -5,6 +5,8 @@ use std::sync::Arc;
 
 use crate::{
     AsDebug,
+    PittoreBitmap,
+    PittoreBitmapLoadError,
     PittoreRenderError,
     PittoreRenderPass,
     PittoreResizeError,
@@ -33,5 +35,8 @@ impl std::ops::Deref for PittoreRenderTarget {
 
 pub trait RenderTarget: AsDebug + Send + Sync {
     fn begin_render_pass(&self, f: &mut dyn FnMut(&mut dyn PittoreRenderPass)) -> Result<(), PittoreRenderError>;
+
+    fn load_bitmap_from_file(&self, file_path: &str) -> Result<PittoreBitmap, PittoreBitmapLoadError>;
+
     fn resize(&self, width: u32, height: u32) -> Result<(), PittoreResizeError>;
 }

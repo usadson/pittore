@@ -1,6 +1,13 @@
 // Copyright (C) 2023 Tristan Gerritsen <tristan@thewoosh.org>
 // All Rights Reserved.
 
+/// An error that occurred whilst loading a bitmap.
+#[derive(Debug, thiserror::Error)]
+pub enum PittoreBitmapLoadError {
+    #[error("The specified image file could not be found.")]
+    FileNotFound,
+}
+
 /// An error that occurred whilst creating the backend.
 #[derive(Debug, thiserror::Error)]
 pub enum PittoreInstantiationError {

@@ -26,6 +26,9 @@ fn main() {
     let render_target = context.attach_to_window(&window)
         .expect("Failed to create a render target (by attaching to the window)");
 
+    let image = render_target.load_bitmap_from_file("C:/Windows/SysWOW64/DefaultAccountTile.png")
+        .expect("Failed to load standard Windows image");
+
     event_loop.run(move |event, _, control_flow| {
         *control_flow = ControlFlow::Wait;
 
@@ -60,7 +63,16 @@ fn main() {
                     render_pass.fill(PittoreColor::MAGENTA.into(), PittoreShape::Ellipse {
                         center: Point2D::new(window_size.width / 2.0, window_size.height / 2.0),
                         radius: Point2D::new(20.0, 20.0),
-                    })
+                    });
+
+                    render_pass.fill(PittoreColor::WHITE.into(), PittoreShape::Rectangle(PittoreRect::new(
+                        Point2D::new(30.0, 30.0),
+                        Size2D::new(364.0, 364.0)
+                    )));
+                    render_pass.fill(image.into(), PittoreShape::Rectangle(PittoreRect::new(
+                        Point2D::new(30.0, 30.0),
+                        Size2D::new(364.0, 364.0)
+                    )));
                 }).unwrap();
             }
 

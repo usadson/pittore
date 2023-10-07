@@ -15,12 +15,16 @@ use std::sync::Arc;
 pub use self::{
     color::PittoreColor,
     error::{
+        PittoreBitmapLoadError,
         PittoreInstantiationError,
         PittoreRenderError,
         PittoreResizeError,
         PittoreWindowAttachmentError,
     },
-    material::PittoreMaterial,
+    material::{
+        PittoreBitmap,
+        PittoreMaterial,
+    },
     render_pass::PittoreRenderPass,
     render_target::PittoreRenderTarget,
     shape::{

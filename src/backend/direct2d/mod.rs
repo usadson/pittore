@@ -3,6 +3,7 @@
 
 mod factory;
 mod render_target;
+mod wic;
 
 use std::sync::Arc;
 
