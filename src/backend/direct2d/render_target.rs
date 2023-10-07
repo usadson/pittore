@@ -6,9 +6,11 @@ use std::{sync::Mutex, ops::Deref};
 use windows::Win32::Graphics::Direct2D::{
     Common::{
         D2D1_COLOR_F,
-        D2D_SIZE_U,
+        D2D_POINT_2F,
         D2D_RECT_F,
+        D2D_SIZE_U,
     },
+    D2D1_ELLIPSE,
     ID2D1HwndRenderTarget,
     ID2D1SolidColorBrush,
 };
@@ -97,6 +99,19 @@ impl<'handle> PittoreRenderPass for DirectRenderPass<'handle> {
         match shape {
             PittoreShape::Rectangle(rect) => unsafe {
                 self.handle.FillRectangle(&convert_rect(rect), &self.solid_color_brush)
+            }
+            PittoreShape::Ellipse { center, radius } => unsafe {
+                self.handle.FillEllipse(
+                    &D2D1_ELLIPSE {
+                        point: D2D_POINT_2F {
+                            x: center.x,
+                            y: center.y,
+                        },
+                        radiusX: radius.x,
+                        radiusY: radius.y,
+                    },
+                    &self.solid_color_brush,
+                );
             }
         }
     }

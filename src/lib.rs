@@ -23,6 +23,7 @@ pub use self::{
     render_target::PittoreRenderTarget,
     shape::{
         PittoreRect,
+        PittorePoint,
         PittoreShape,
     },
 };
